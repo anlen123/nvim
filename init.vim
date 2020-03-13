@@ -1,3 +1,22 @@
+" __  ____   __  _   ___     _____ __  __ ____   ____
+"|  \/  \ \ / / | \ | \ \   / /_ _|  \/  |  _ \ / ___|
+"| |\/| |\ V /  |  \| |\ \ / / | || |\/| | |_) | |
+"| |  | | | |   | |\  | \ V /  | || |  | |  _ <| |___
+"|_|  |_| |_|   |_| \_|  \_/  |___|_|  |_|_| \_\\____|
+
+" Author: @anlen123
+" ===
+" === Auto load for first time uses
+" ===
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+
+map <F5> :w<cr>:!python %<CR>
+map <F5> :w<cr>:!python %<CR>
 set nu
 set nocompatible
 source $VIMRUNTIME/vimrc_example.vim
@@ -163,5 +182,7 @@ Plug 'gko/vim-coloresque'
 Plug 'will133/vim-dirdiff'
 Plug 'itchyny/vim-cursorword'
 "Plug 'Valloric/YouCompleteM'
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
