@@ -19,7 +19,6 @@ map <F5> :w<cr>:!python %<CR>
 map <F5> :w<cr>:!python %<CR>
 set nu
 set nocompatible
-source $VIMRUNTIME/vimrc_example.vim
 "source $VIMRUNTIME/mswin.vim
 "behave mswin
  
@@ -183,7 +182,6 @@ Plug 'will133/vim-dirdiff'
 Plug 'itchyny/vim-cursorword'
 "Plug 'Valloric/YouCompleteM'
 Plug 'rkulla/pydiction'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 filetype plugin on
 let g:pydiction_location = '~/.config/nvim/tools/pydiction/complete-dict'
