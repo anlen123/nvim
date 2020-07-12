@@ -162,7 +162,7 @@ Plug 'vim-scripts/AutoComplPop'
 "Ctrl + F9 一键保存并编译
 "Ctrl + F10 一键保存并连接
 "F8 编译调试（仅限于单文件)(gdb)
-Plug 'Svtter/ACM.vim'
+"Plug 'Svtter/ACM.vim'
 Plug 'scrooloose/nerdtree' "文件树
 Plug 'easymotion/vim-easymotion'
 nmap ss <Plug>(easymotion-s2)
