@@ -49,7 +49,7 @@ endfunction
  "设置文件的代码形式 utf8
 set encoding=utf-8
 set termencoding=utf-8
-set fileencoding=utf-8
+"set fileencoding=utf-8
 set fileencodings=ucs-bom,utf-8,chinese,cp936
 "vim的菜单乱码解决
 source $VIMRUNTIME/delmenu.vim
