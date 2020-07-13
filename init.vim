@@ -14,11 +14,11 @@
 "	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 "endif
 
-"if empty(glob('~/.config/nvim/autoload/plug.vim'))
-"	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-"				\ https://gitee.com/anlen123/nvim/raw/master/plug.vim
-autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-"endif
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+				\ https://gitee.com/anlen123/nvim/raw/master/plug.vim
+ autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
 
 map <F5> :w<cr>:!python %<CR>
