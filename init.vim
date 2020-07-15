@@ -187,7 +187,7 @@ Plug 'gko/vim-coloresque'
 Plug 'will133/vim-dirdiff'
 Plug 'itchyny/vim-cursorword'
 "Plug 'Valloric/YouCompleteM'
-Plug 'rkulla/pydiction'
+"Plug 'rkulla/pydiction'
 call plug#end()
 filetype plugin on
 let g:pydiction_location = '~/.config/nvim/tools/pydiction/complete-dict'
