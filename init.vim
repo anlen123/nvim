@@ -190,7 +190,7 @@ Plug 'itchyny/vim-cursorword'
 "Plug 'rkulla/pydiction'
 call plug#end()
 filetype plugin on
-let g:pydiction_location = '~/.config/nvim/tools/pydiction/complete-dict'
+"let g:pydiction_location = '~/.config/nvim/tools/pydiction/complete-dict'
 
 if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
