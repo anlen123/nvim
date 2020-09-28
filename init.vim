@@ -157,6 +157,7 @@ Plug 'ncm2/ncm2-path'
 "状态栏的例子
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'skywind3000/asyncrun.vim'
 "自动补全
 "Plug 'ervandew/supertab'
 "Plug 'yggdroot/indentline'
@@ -196,5 +197,59 @@ if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 set undofile
-"set backup
+
 "set swapfile
+noremap <F9> :call CompileRunGcc()<CR>
+
+func! CompileRunGcc()
+  exec "w"
+  if &filetype == 'c'
+    exec "!g++ % -o %<"
+    exec "!time ./%<"
+  elseif &filetype == 'cpp'
+    exec "!g++ % -o %<"
+    "exec "!./%<"
+    "exec "!rm -rf %<"
+  elseif &filetype == 'java'
+    exec "!javac %"
+    exec "!time java %<"
+    exec "!rm %<.class"
+  elseif &filetype == 'sh'
+    :!time bash %
+  elseif &filetype == 'python'
+    set splitbelow
+    :sp
+    :term python3 %
+  elseif &filetype == 'html'
+    silent! exec "!" google-chrome-stable " % &"
+  elseif &filetype == 'markdown'
+    exec "InstantMarkdownPreview"
+  elseif &filetype == 'tex'
+    silent! exec "VimtexStop"
+    silent! exec "VimtexCompile"
+  elseif &filetype == 'dart'
+    exec "CocCommand flutter.run -d ".g:flutter_default_device
+    CocCommand flutter.dev.openDevLog
+  elseif &filetype == 'javascript'
+    set splitbelow
+    :sp
+    :term export DEBUG="INFO,ERROR,WARNING"; node --trace-warnings .
+  elseif &filetype == 'go'
+    set splitbelow
+    :sp
+    :term go run .
+  endif
+endfunc
+
+"每次创建C++文件都会初始化一些内容
+autocmd BufNewFile *.cpp exec ":call CppInit()"
+func CppInit()
+  if expand("%:e") == "cpp"
+    call setline(1,"#include<bits/stdc++.h>")
+    call setline(2,"using namepace std;")
+    call setline(3,"int main(int argc, const char *argv[]){")
+    call setline(4,"")
+    call setline(5,"    return 0;")
+    call setline(6,"}")
+  endif
+endfunc
