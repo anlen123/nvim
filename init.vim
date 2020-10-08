@@ -151,27 +151,20 @@ map L :set splitright<CR>:vsplit<CR> "右分屏
 map H :set nosplitright<CR>:vsplit<CR>
 
 call plug#begin('~/.config/nvim/plugged')
-Plug 'ncm2/ncm2-jedi'
-Plug 'ncm2/ncm2'
-Plug 'ncm2/ncm2-path'
 "状态栏的例子
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'skywind3000/asyncrun.vim'
-"自动补全
-"Plug 'ervandew/supertab'
-"Plug 'yggdroot/indentline'
-"自动弹出提示
-Plug 'vim-scripts/AutoComplPop'
+
 "编译运行
-"F4 添加作者信息，更新作者信息
-"F9 一键保存、编译、连接存并运行
-"Ctrl + F9 一键保存并编译
-"Ctrl + F10 一键保存并连接
-"F8 编译调试（仅限于单文件)(gdb)
-"Plug 'Svtter/ACM.vim'
 Plug 'scrooloose/nerdtree' "文件树
 Plug 'easymotion/vim-easymotion'
+
+"自动补全插件,.路径补全和上下文补全
+Plug 'Shougo/neocomplcache'
+let g:neocomplcache_enable_at_startup = 1 
+let g:neocomplcache_enable_auto_select = 1
+
 nmap ss <Plug>(easymotion-s2)
 "注释代码工具
 "\cc注释当前行 \cu 撤销注释当前行 \cs sexily注释 \cA 行尾注释，切换成输入模式
@@ -207,9 +200,16 @@ func! CompileRunGcc()
     exec "!g++ % -o %<"
     exec "!time ./%<"
   elseif &filetype == 'cpp'
-    exec "!g++ % -o %<"
-    "exec "!./%<"
-    "exec "!rm -rf %<"
+    set splitbelow    
+    exec "!g++ -std=c++11 % -Wall -o %<"
+    :sp
+    :res 10
+    :term ./%<
+    exec "!rm -rf ./%<"
+    "exec "!g++ % -o %<"
+    ":x
+    ""exec "!./%<"
+    ""exec "!rm -rf %<"
   elseif &filetype == 'java'
     exec "!javac %"
     exec "!time java %<"
@@ -246,10 +246,11 @@ autocmd BufNewFile *.cpp exec ":call CppInit()"
 func CppInit()
   if expand("%:e") == "cpp"
     call setline(1,"#include<bits/stdc++.h>")
-    call setline(2,"using namepace std;")
+    call setline(2,"using namespace std;")
     call setline(3,"int main(int argc, const char *argv[]){")
     call setline(4,"")
     call setline(5,"    return 0;")
     call setline(6,"}")
   endif
 endfunc
+autocmd BufNewFile * normal G'
