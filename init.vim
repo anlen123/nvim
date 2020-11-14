@@ -1,8 +1,8 @@
-" __  ____   __  _   ___     _____ __  __ ____   ____
-"|  \/  \ \ / / | \ | \ \   / /_ _|  \/  |  _ \ / ___|
-"| |\/| |\ V /  |  \| |\ \ / / | || |\/| | |_) | |
-"| |  | | | |   | |\  | \ V /  | || |  | |  _ <| |___
-"|_|  |_| |_|   |_| \_|  \_/  |___|_|  |_|_| \_\\____|
+"" __  ____   __  _   ___     _____ __  __ ____   ____
+""|  \/  \ \ / / | \ | \ \   / /_ _|  \/  |  _ \ / ___|
+""| |\/| |\ V /  |  \| |\ \ / / | || |\/| | |_) | |
+""| |  | | | |   | |\  | \ V /  | || |  | |  _ <| |___
+""|_|  |_| |_|   |_| \_|  \_/  |___|_|  |_|_| \_\\____|
 
 " Author: @anlen123
 " ===
@@ -62,7 +62,7 @@ source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
  
 "vim提示信息乱码的解决
-language messages zh_CN.utf-8
+"language messages zh_CN.utf-8
 filetype on
 filetype plugin indent on
 "colorscheme evening	"配色方案
@@ -131,8 +131,6 @@ map <F5> :w<cr>:!python %<CR>
 map L :set splitright<CR>:vsplit<CR> "右分屏
 map H :set nosplitright<CR>:vsplit<CR>
 
-
-set clipboard=unnamed
 set number 
 set smartindent
 
@@ -144,44 +142,45 @@ set clipboard=unnamed
 vnoremap <Leader>y "+y
 " 设置快捷键将系统剪贴板内容粘贴至vim
 nmap <Leader>p "+p
-noremap X :wq<CR>
+noremap X :x<CR>
 noremap Q :q!<CR>
 noremap S :w<CR>
 map L :set splitright<CR>:vsplit<CR> "右分屏
-map H :set nosplitright<CR>:vsplit<CR>
-
+map H :set nosplitright<CR>:vsplit<CR> 
 call plug#begin('~/.config/nvim/plugged')
 "状态栏的例子
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'skywind3000/asyncrun.vim'
-
+"Plug 'skywind3000/asyncrun.vim'
+"图标插件
+Plug 'ryanoasis/vim-devicons'
 "编译运行
 Plug 'scrooloose/nerdtree' "文件树
+noremap tt :NERDTree<CR>
 Plug 'easymotion/vim-easymotion'
 
 "自动补全插件,.路径补全和上下文补全
-Plug 'Shougo/neocomplcache'
-let g:neocomplcache_enable_at_startup = 1 
-let g:neocomplcache_enable_auto_select = 1
+"Plug 'Shougo/neocomplcache'
+"let g:neocomplcache_enable_at_startup = 1 
+"let g:neocomplcache_enable_auto_select = 1
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+let g:coc_global_extensions = [ 'coc-json','coc-vimlsp','coc-marketplace']
+"直接从空格调出补全
+"inoremap <silent> <expr> <c-o> coc#refresh() 
 
 nmap ss <Plug>(easymotion-s2)
 "注释代码工具
 "\cc注释当前行 \cu 撤销注释当前行 \cs sexily注释 \cA 行尾注释，切换成输入模式
 Plug 'scrooloose/nerdcommenter'
-noremap tt :NERDTree<CR>
-"关于状态栏的小配置
-"Powerline setting
-"let g:airline_theme='molokai'
-"let g:airline_powerl"ine_fonts = 1
 "一只说话的狗
 Plug 'mhinz/vim-startify'
+"自动加括号
 Plug 'jiangmiao/auto-pairs'
 Plug 'gko/vim-coloresque'
 Plug 'will133/vim-dirdiff'
 Plug 'itchyny/vim-cursorword'
 "Plug 'Valloric/YouCompleteM'
-"Plug 'rkulla/pydiction'
 call plug#end()
 filetype plugin on
 "let g:pydiction_location = '~/.config/nvim/tools/pydiction/complete-dict'
@@ -189,8 +188,8 @@ filetype plugin on
 if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
-set undofile
 
+set undofile
 "set swapfile
 noremap <F9> :call CompileRunGcc()<CR>
 
@@ -206,10 +205,6 @@ func! CompileRunGcc()
     :res 10
     :term ./%<
     exec "!rm -rf ./%<"
-    "exec "!g++ % -o %<"
-    ":x
-    ""exec "!./%<"
-    ""exec "!rm -rf %<"
   elseif &filetype == 'java'
     exec "!javac %"
     exec "!time java %<"
@@ -254,3 +249,11 @@ func CppInit()
   endif
 endfunc
 autocmd BufNewFile * normal G'
+function! CleverTab()
+        if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
+                return "\<Tab>"
+        else
+                return "\<C-N>"
+        endif
+endfunction
+inoremap <Tab> <C-R>=CleverTab()<CR>
