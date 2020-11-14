@@ -21,8 +21,6 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 endif
 
 
-map <F5> :w<cr>:!python %<CR>
-map <F5> :w<cr>:!python %<CR>
 set nu
 set nocompatible
 "source $VIMRUNTIME/mswin.vim
@@ -67,7 +65,7 @@ filetype on
 filetype plugin indent on
 "colorscheme evening	"配色方案
 "colorscheme desert
-"set background=dark
+set background=dark
 
 
 set helplang=cn		"设置中文帮助
@@ -76,17 +74,13 @@ set guifont=Monaco:h10	"设置字体为Monaco，大小10
 set tabstop=4		"设置tab的跳数
 set expandtab
 set backspace=2 	"设置退格键可用
-"set nu! 		"设置显示行号
 set wrap 		"设置自动换行
 "set nowrap 		"设置不自动换行
 set linebreak 		"整词换行，与自动换行搭配使用
 "set list 		"显示制表符
 set autochdir 		"自动设置当前目录为正在编辑的目录
 set hidden 		"自动隐藏没有保存的缓冲区，切换buffer时不给出保存当前buffer的提示
-set scrolloff=5 	"在光标接近底端或顶端时，自动下滚或上滚
-"Toggle Menu and Toolbar 	"隐藏菜单栏和工具栏
-"set guioptions-=m
-"set guioptions-=T
+set scrolloff=10	"在光标接近底端或顶端时，自动下滚或上滚
 set showtabline=2 	"设置显是显示标签栏
 set autoread 		"设置当文件在外部被修改，自动更新该文件
 set tabstop=4         
@@ -95,7 +89,6 @@ set shiftwidth=4
 set expandtab       
 "set mouse=a 		"设置在任何模式下鼠标都可用
 "set nobackup 		"设置不生成备份文件
-"set go=				"不要图形按钮
 "set guioptions-=T           " 隐藏工具栏
 "set guioptions-=m           " 隐藏菜单栏
  
@@ -126,14 +119,12 @@ set ai! "设置自动缩进
 ""hi CursorLine   cterm=NONE ctermbg=
 set guicursor+=a:blinkon0 "设置光标不闪烁
 "set fdm=indent "代码自动隐藏（合并） 
-
-map <F5> :w<cr>:!python %<CR>
-map L :set splitright<CR>:vsplit<CR> "右分屏
-map H :set nosplitright<CR>:vsplit<CR>
-
-set number 
+map sl :set splitright<CR>:vsplit<CR> "右分屏
+map sh :set nosplitright<CR>:vsplit<CR> "右分屏
+map B :tabnew <CR>
+map + :tabnext <CR>
+map _ :tabprevious <CR>
 set smartindent
-
 "关闭警告音
 set vb t_vb=
 "Vim 与系统剪切板共享
@@ -145,27 +136,24 @@ nmap <Leader>p "+p
 noremap X :x<CR>
 noremap Q :q!<CR>
 noremap S :w<CR>
-map L :set splitright<CR>:vsplit<CR> "右分屏
-map H :set nosplitright<CR>:vsplit<CR> 
 call plug#begin('~/.config/nvim/plugged')
 "状态栏的例子
 Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-"Plug 'skywind3000/asyncrun.vim'
+"Plug 'vim-airline/vim-airline-themes'
+"let g:airline_theme='hybrid'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+
 "图标插件
 Plug 'ryanoasis/vim-devicons'
-"编译运行
-Plug 'scrooloose/nerdtree' "文件树
-noremap tt :NERDTree<CR>
 Plug 'easymotion/vim-easymotion'
-
 "自动补全插件,.路径补全和上下文补全
 "Plug 'Shougo/neocomplcache'
 "let g:neocomplcache_enable_at_startup = 1 
 "let g:neocomplcache_enable_auto_select = 1
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = [ 'coc-json','coc-vimlsp','coc-marketplace']
+let g:coc_global_extensions = [ 'coc-vimlsp','coc-marketplace','coc-jedi','coc-python','coc-pyls']
 "直接从空格调出补全
 "inoremap <silent> <expr> <c-o> coc#refresh() 
 
@@ -178,12 +166,12 @@ Plug 'mhinz/vim-startify'
 "自动加括号
 Plug 'jiangmiao/auto-pairs'
 Plug 'gko/vim-coloresque'
-Plug 'will133/vim-dirdiff'
+"Plug 'will133/vim-dirdiff'
 Plug 'itchyny/vim-cursorword'
-"Plug 'Valloric/YouCompleteM'
+Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins'  }
+Plug 'kristijanhusak/defx-icons'
 call plug#end()
 filetype plugin on
-"let g:pydiction_location = '~/.config/nvim/tools/pydiction/complete-dict'
 
 if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -257,3 +245,205 @@ function! CleverTab()
         endif
 endfunction
 inoremap <Tab> <C-R>=CleverTab()<CR>
+"========defx===========
+"========defx===========
+" 使用 ;e 切换显示文件浏览，使用 ;a 查找到当前文件位置
+let g:maplocalleader=';'
+nnoremap <silent> <LocalLeader>e
+\ :<C-u>Defx -resume -toggle -buffer-name=tab`tabpagenr()`<CR>
+nnoremap <silent> <LocalLeader>a
+\ :<C-u>Defx -resume -buffer-name=tab`tabpagenr()` -search=`expand('%:p')`<CR>
+
+function! s:defx_mappings() abort
+	"Defx window keyboard mappings
+	setlocal signcolumn=no
+	" 使用回车打开文件
+	nnoremap <silent><buffer><expr> <CR> defx#do_action('multi', ['drop'])
+endfunction
+
+call defx#custom#option('_', {
+	\ 'columns': 'indent:git:icons:filename',
+	\ 'winwidth': 25,
+	\ 'split': 'vertical',
+	\ 'direction': 'topleft',
+	\ 'listed': 1,
+	\ 'show_ignored_files': 0,
+	\ 'root_marker': ' ',
+	\ 'ignored_files':
+	\     '.mypy_cache,.pytest_cache,.git,.hg,.svn,.stversions'
+	\   . ',__pycache__,.sass-cache,*.egg-info,.DS_Store,*.pyc,*.swp'
+	\ })
+autocmd FileType defx call s:defx_mappings()
+"========defx===========
+"========defx===========
+"========COC============
+"========COC============
+"========COC============
+"========COC============
+
+" Give more space for displaying messages.
+set cmdheight=2
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+" Note coc#float#scroll works on neovim >= 0.4.0 or vim >= 8.2.0750
+nnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+
+" NeoVim-only mapping for visual mode scroll
+" Useful on signatureHelp after jump placeholder of snippet expansion
+if has('nvim')
+  vnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#nvim_scroll(1, 1) : "\<C-f>"
+  vnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#nvim_scroll(0, 1) : "\<C-b>"
+endif
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings for CoCList
+" Show all diagnostics.
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+"========COC============
+"========COC============
+"========COC============
+"========COC============
+"========COC============
+"========COC============
+"========COC============
