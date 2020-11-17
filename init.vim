@@ -156,7 +156,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 let g:coc_global_extensions = [ 'coc-vimlsp','coc-marketplace','coc-jedi','coc-python','coc-pyls']
 "直接从空格调出补全
 "inoremap <silent> <expr> <c-o> coc#refresh() 
-
 nmap ss <Plug>(easymotion-s2)
 "注释代码工具
 "\cc注释当前行 \cu 撤销注释当前行 \cs sexily注释 \cA 行尾注释，切换成输入模式
@@ -447,3 +446,5 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 "========COC============
 "========COC============
 "========COC============
+noremap ;p :set paste<CR>
+noremap ;np :set nopaste<CR>
