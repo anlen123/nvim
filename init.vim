@@ -135,7 +135,7 @@ vnoremap <Leader>y "+y
 nmap <Leader>p "+p
 noremap X :x<CR>
 noremap Q :q!<CR>
-noremap S :w<CR>
+noremap W :w<CR>
 call plug#begin('~/.config/nvim/plugged')
 "状态栏的例子
 Plug 'bling/vim-airline'
@@ -219,7 +219,7 @@ func! CompileRunGcc()
   elseif &filetype == 'go'
     set splitbelow
     :sp
-    :term go run .
+    :term go run %
   endif
 endfunc
 
@@ -233,6 +233,13 @@ func CppInit()
     call setline(4,"")
     call setline(5,"    return 0;")
     call setline(6,"}")
+  endif
+endfunc
+autocmd BufNewFile *.py exec ":call PyInit()"
+func PyInit()
+  if expand("%:e") == "py"
+    call setline(1,"#!/root/miniconda3/bin/python")
+    call setline(2,'# -*- coding: utf-8 -*- ')
   endif
 endfunc
 autocmd BufNewFile * normal G'
