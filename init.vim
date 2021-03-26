@@ -153,7 +153,7 @@ Plug 'easymotion/vim-easymotion'
 "let g:neocomplcache_enable_auto_select = 1
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = [ 'coc-vimlsp','coc-marketplace','coc-jedi','coc-python','coc-pyls']
+let g:coc_global_extensions = [ 'coc-vimlsp','coc-marketplace','coc-jedi','coc-python', 'coc-pyright']
 "直接从空格调出补全
 "inoremap <silent> <expr> <c-o> coc#refresh() 
 nmap ss <Plug>(easymotion-s2)
@@ -167,8 +167,10 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'gko/vim-coloresque'
 "Plug 'will133/vim-dirdiff'
 Plug 'itchyny/vim-cursorword'
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins'  }
-Plug 'kristijanhusak/defx-icons'
+Plug 'scrooloose/nerdtree'
+Plug 'universal-ctags/ctags'
+Plug 'tpope/vim-surround' " 用下面的插件选中代码后,使用 S 对那些代码进行符号包裹  cs({ 把小括号包裹的变成大括号
+Plug 'gcmt/wildfire.vim'  " 回车 会选中 当前 符号包裹的 代码
 call plug#end()
 filetype plugin on
 
@@ -179,7 +181,7 @@ endif
 set undofile
 "set swapfile
 noremap <F9> :call CompileRunGcc()<CR>
-
+noremap tt :NERDTree<CR>
 func! CompileRunGcc()
   exec "w"
   if &filetype == 'c'
@@ -243,6 +245,13 @@ func PyInit()
   endif
 endfunc
 autocmd BufNewFile * normal G'
+"========COC============
+"========COC============
+"========COC============
+"========COC============
+"========COC============
+"========COC============
+"========COC============
 function! CleverTab()
         if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
                 return "\<Tab>"
@@ -251,41 +260,6 @@ function! CleverTab()
         endif
 endfunction
 inoremap <Tab> <C-R>=CleverTab()<CR>
-"========defx===========
-"========defx===========
-" 使用 ;e 切换显示文件浏览，使用 ;a 查找到当前文件位置
-let g:maplocalleader=';'
-nnoremap <silent> <LocalLeader>e
-\ :<C-u>Defx -resume -toggle -buffer-name=tab`tabpagenr()`<CR>
-nnoremap <silent> <LocalLeader>a
-\ :<C-u>Defx -resume -buffer-name=tab`tabpagenr()` -search=`expand('%:p')`<CR>
-
-function! s:defx_mappings() abort
-	"Defx window keyboard mappings
-	setlocal signcolumn=no
-	" 使用回车打开文件
-	nnoremap <silent><buffer><expr> <CR> defx#do_action('multi', ['drop'])
-endfunction
-
-call defx#custom#option('_', {
-	\ 'columns': 'indent:git:icons:filename',
-	\ 'winwidth': 25,
-	\ 'split': 'vertical',
-	\ 'direction': 'topleft',
-	\ 'listed': 1,
-	\ 'show_ignored_files': 0,
-	\ 'root_marker': ' ',
-	\ 'ignored_files':
-	\     '.mypy_cache,.pytest_cache,.git,.hg,.svn,.stversions'
-	\   . ',__pycache__,.sass-cache,*.egg-info,.DS_Store,*.pyc,*.swp'
-	\ })
-autocmd FileType defx call s:defx_mappings()
-"========defx===========
-"========defx===========
-"========COC============
-"========COC============
-"========COC============
-"========COC============
 
 " Give more space for displaying messages.
 set cmdheight=2
@@ -339,9 +313,6 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -359,20 +330,14 @@ endfunction
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
 
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+"" Symbol renaming.
+"nmap <leader>rn <Plug>(coc-rename)
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+""" Formatting selected code.
+"xmap <leader>f  <Plug>(coc-format-selected)
+"nmap <leader>f  <Plug>(coc-format-selected)
+
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
@@ -409,11 +374,6 @@ if has('nvim')
   vnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#nvim_scroll(0, 1) : "\<C-b>"
 endif
 
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of language server.
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
 
@@ -427,24 +387,6 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 "========COC============
 "========COC============
