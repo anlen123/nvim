@@ -29,7 +29,7 @@ set nocompatible
 set diffexpr=MyDiff()
 "function MyDiff()
 "let opt = '-a --binary '
-  "if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  "if &diffopt =~ 'icase' | let opt= opt . '-i ' | endif
   "if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
   "let arg1 = v:fname_in
   "if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
@@ -169,7 +169,7 @@ Plug 'gko/vim-coloresque'
 Plug 'itchyny/vim-cursorword'
 Plug 'scrooloose/nerdtree'
 Plug 'universal-ctags/ctags'
-Plug 'tpope/vim-surround' " 用下面的插件选中代码后,使用 S 对那些代码进行符号包裹  cs({ 把小括号包裹的变成大括号
+Plug 'tpope/vim-surround' " 用下面的插件选中代码后,使用 S 对那些代码进行符号包裹  ;cs({ 把小括号包裹的变成大括号
 Plug 'gcmt/wildfire.vim'  " 回车 会选中 当前 符号包裹的 代码
 call plug#end()
 filetype plugin on
@@ -397,3 +397,4 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 "========COC============
 noremap ;p :set paste<CR>
 noremap ;np :set nopaste<CR>
+ 
