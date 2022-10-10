@@ -23,33 +23,7 @@ endif
 
 set nu
 set nocompatible
-"source $VIMRUNTIME/mswin.vim
-"behave mswin
  
-set diffexpr=MyDiff()
-"function MyDiff()
-"let opt = '-a --binary '
-  "if &diffopt =~ 'icase' | let opt= opt . '-i ' | endif
-  "if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  "let arg1 = v:fname_in
-  "if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  "let arg2 = v:fname_new
-  "if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  "let arg3 = v:fname_out
-  "if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  "let eq = ''
-  "if $VIMRUNTIME =~ ' '
-    "if &sh =~ '\<cmd'
-      "let cmd = '""' . $VIMRUNTIME . '\diff"'
-      "let eq = '"'
-    "else
-      "let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    "endif
-  "else
-    "let cmd = $VIMRUNTIME . '\diff'
-  "endif
-  "silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
-"endfunction
  "设置文件的代码形式 utf8
 set encoding=utf-8
 set termencoding=utf-8
@@ -240,7 +214,7 @@ endfunc
 autocmd BufNewFile *.py exec ":call PyInit()"
 func PyInit()
   if expand("%:e") == "py"
-    call setline(1,"#!/root/miniconda3/bin/python")
+    call setline(1,"#!/Users/liuhq/miniconda3/bin/python")
     call setline(2,'# -*- coding: utf-8 -*- ')
   endif
 endfunc
@@ -397,4 +371,10 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 "========COC============
 noremap ;p :set paste<CR>
 noremap ;np :set nopaste<CR>
- 
+
+
+"-------------------------------------------------------------------------------
+" Buffers
+"-------------------------------------------------------------------------------
+nmap <S-Tab> :bprev<Return>
+nmap <Tab> :bnext<Return>
